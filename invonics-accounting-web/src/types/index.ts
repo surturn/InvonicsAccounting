@@ -98,3 +98,31 @@ export interface User {
   fullName: string;
   role: string;
 }
+
+export interface TransactionFilters {
+  page?: number;
+  limit?: number;
+  from?: string;
+  to?: string;
+  partyId?: number;
+}
+
+export interface CreateIncomeBody {
+  date: string;
+  narration: string;
+  partyId?: number;
+  lines: { accountId: number; amount: number }[];
+}
+
+export interface CreateExpenseBody {
+  date: string;
+  narration: string;
+  partyId?: number;
+  lines: { accountId: number; amount: number }[];
+}
+
+export interface CreateDrawingBody {
+  date: string;
+  narration: string;
+  amount: number;
+}
