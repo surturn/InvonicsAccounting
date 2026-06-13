@@ -9,7 +9,7 @@ import {
   LogOut
 } from 'lucide-react';
 import { ROUTES } from '../../constants/routes';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth, useLogout } from '../../hooks/useAuth';
 
 interface SidebarProps {
   onCloseMobile?: () => void;
@@ -17,6 +17,7 @@ interface SidebarProps {
 
 export default function Sidebar({ onCloseMobile }: SidebarProps) {
   const { user } = useAuth();
+  const { mutate: logout, isPending } = useLogout();
 
   const links = [
     { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: LayoutDashboard },
@@ -62,9 +63,13 @@ export default function Sidebar({ onCloseMobile }: SidebarProps) {
             {user?.email || 'john@invonics.com'}
           </p>
         </div>
-        <button className="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg text-sm font-medium text-danger hover:bg-danger-subtle transition-colors">
+        <button 
+          onClick={() => logout()}
+          disabled={isPending}
+          className="flex items-center gap-2 px-3 py-2 w-full text-left rounded-lg text-sm font-medium text-danger hover:bg-danger-subtle transition-colors disabled:opacity-50"
+        >
           <LogOut className="w-4 h-4" />
-          Logout
+          {isPending ? 'Logging out...' : 'Logout'}
         </button>
       </div>
     </div>
