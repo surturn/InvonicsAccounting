@@ -38,8 +38,8 @@ router.post('/login', validate(loginSchema), async (req, res, next) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: true, // Required for cross-origin cookies
+      sameSite: 'none', // Required for cross-origin cookies
       maxAge: 8 * 60 * 60 * 1000 // 8 hours in ms
     });
 
@@ -57,7 +57,11 @@ router.post('/login', validate(loginSchema), async (req, res, next) => {
 });
 
 router.post('/logout', (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none'
+  });
   return res.status(200).json({ message: 'Logged out' });
 });
 
