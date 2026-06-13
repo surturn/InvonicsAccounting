@@ -13,6 +13,60 @@ const loginSchema = z.object({
   password: z.string().min(6)
 });
 
+const registerSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(6)
+});
+
+router.post('/register', validate(registerSchema), async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+
+    const existing = await query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
+      return res.status(400).json({ error: 'Email already registered' });
+    }
+
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    const result = await query(
+      `INSERT INTO users (name, email, password_hash, role, is_active)
+       VALUES ($1, $2, $3, 'user', true)
+       RETURNING id, name, email, role`,
+      [name, email, passwordHash]
+    );
+
+    const user = result.rows[0];
+
+    const secret = process.env.JWT_SECRET || 'secret';
+    const token = jwt.sign(
+      { userId: user.id, role: user.role, email: user.email },
+      secret,
+      { expiresIn: '8h' }
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 8 * 60 * 60 * 1000
+    });
+
+    return res.status(201).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        fullName: user.name,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post('/login', validate(loginSchema), async (req, res, next) => {
   try {
     const { email, password } = req.body;

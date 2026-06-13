@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { getMe, loginUser, logoutUser } from '../api/auth';
+import { getMe, loginUser, logoutUser, registerUser } from '../api/auth';
 import { useToast } from '../components/ui/Toast';
 import { User } from '../types';
 
@@ -27,6 +27,23 @@ export function useLogin() {
     },
     onError: (err: any) => {
       toastError(err?.response?.data?.error || 'Login failed. Please try again.');
+    },
+  });
+}
+
+export function useRegister() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { error: toastError } = useToast();
+
+  return useMutation({
+    mutationFn: registerUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
+      navigate('/dashboard');
+    },
+    onError: (err: any) => {
+      toastError(err?.response?.data?.error || 'Registration failed. Please try again.');
     },
   });
 }

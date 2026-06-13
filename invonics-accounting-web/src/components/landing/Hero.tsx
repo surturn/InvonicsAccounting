@@ -30,17 +30,17 @@ export default function Hero() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link 
-              to="/dashboard" 
+              to="/signup" 
               className="w-full sm:w-auto px-8 py-4 bg-accent hover:bg-accent-hover text-bg-base font-bold text-lg transition-colors flex items-center justify-center gap-2 border border-transparent hover:border-white/20"
             >
-              Enter Dashboard
+              Start Free Trial
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link 
               to="/login" 
               className="w-full sm:w-auto px-8 py-4 bg-transparent border border-bg-border text-text-primary hover:bg-bg-surface font-bold text-lg transition-colors flex items-center justify-center gap-2"
             >
-              Sign In to Account
+              Sign In
             </Link>
           </div>
         </div>

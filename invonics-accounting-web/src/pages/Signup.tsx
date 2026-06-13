@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { useLogin } from '../hooks/useAuth';
+import { useRegister } from '../hooks/useAuth';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export default function Login() {
+export default function Signup() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { mutate: login, isPending, error } = useLogin();
+  const { mutate: register, isPending, error } = useRegister();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login({ email, password });
+    register({ name, email, password });
   };
 
   return (
@@ -22,11 +23,21 @@ export default function Login() {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-accent tracking-tight">Invonics</h1>
           <p className="text-sm text-text-muted uppercase tracking-wider mt-1 font-medium">
-            Accounting System
+            Create Account
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            label="Full Name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="John Doe"
+            required
+            disabled={isPending}
+          />
+
           <Input
             label="Email Address"
             type="email"
@@ -61,21 +72,21 @@ export default function Login() {
             className="w-full mt-6 rounded-none font-bold"
             loading={isPending}
           >
-            Sign In
+            Sign Up
           </Button>
 
           <div className="mt-4 text-center">
             <p className="text-sm text-text-secondary">
-              Don't have an account?{' '}
-              <Link to="/signup" className="text-accent hover:text-accent-hover font-medium">
-                Sign Up
+              Already have an account?{' '}
+              <Link to="/login" className="text-accent hover:text-accent-hover font-medium">
+                Sign In
               </Link>
             </p>
           </div>
 
           {error && (
             <div className="p-3 mt-4 bg-danger/10 border border-danger/20 text-danger text-sm text-center">
-              {(error as any)?.response?.data?.error || 'Authentication failed'}
+              {(error as any)?.response?.data?.error || 'Registration failed'}
             </div>
           )}
         </form>

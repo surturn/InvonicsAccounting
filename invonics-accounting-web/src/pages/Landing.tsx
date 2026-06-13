@@ -15,8 +15,8 @@ export default function Landing() {
             <Link to="/login" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">
               Sign In
             </Link>
-            <Link to="/dashboard" className="text-sm font-bold text-bg-base bg-text-primary hover:bg-white px-4 py-2 transition-colors">
-              Go to Dashboard
+            <Link to="/signup" className="text-sm font-bold text-bg-base bg-text-primary hover:bg-white px-4 py-2 transition-colors">
+              Create Account
             </Link>
           </div>
         </div>
@@ -32,7 +32,7 @@ export default function Landing() {
           <div className="container mx-auto px-6">
             <h2 className="text-4xl lg:text-5xl font-bold text-text-primary mb-8">Ready to modernize your accounting?</h2>
             <Link 
-              to="/dashboard" 
+              to="/signup" 
               className="inline-flex items-center justify-center px-8 py-4 bg-accent hover:bg-accent-hover text-bg-base font-bold text-lg transition-colors border border-transparent"
             >
               Start Free Trial
