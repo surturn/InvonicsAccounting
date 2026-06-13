@@ -50,18 +50,18 @@ export default function Hero() {
 
         {/* Hero Mockup (Floating) */}
         <div className="w-full lg:w-1/2 mt-20 lg:mt-0 relative flex justify-center lg:justify-end">
-          <div className="relative w-full max-w-[600px]">
-            {/* The actual mockup image will go here, currently using the standard dashboard mockup but making it heavily rounded to match the theme */}
-            <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 border-text-inverse/10 transform rotate-[-2deg] transition-transform hover:rotate-0 duration-500">
+          <div className="relative w-full max-w-[600px] flex justify-center">
+            {/* Using the beautiful 3D isometric mobile mockup */}
+            <div className="relative w-full drop-shadow-2xl hover:scale-105 transition-transform duration-500">
               <img 
-                src="/assets/mockups/dashboard.png" 
-                alt="Invonics Accounting Dashboard" 
-                className="w-full h-auto"
+                src="/assets/mockups/hero-mobile.png" 
+                alt="Invonics Mobile App Experience" 
+                className="w-full h-auto object-contain"
               />
             </div>
             
             {/* Floating Badge */}
-            <div className="absolute -bottom-6 -left-6 bg-accent text-white p-6 rounded-3xl shadow-xl flex flex-col items-center justify-center transform rotate-3">
+            <div className="absolute bottom-4 left-0 bg-accent text-white p-6 rounded-3xl shadow-xl flex flex-col items-center justify-center transform -rotate-3 z-20">
               <span className="text-3xl font-extrabold">25+</span>
               <span className="text-sm font-medium opacity-90">Years Experience</span>
             </div>
