@@ -12,6 +12,8 @@ import AppShell from './components/layout/AppShell';
 
 import { useAuth } from './hooks/useAuth';
 
+import { ToastProvider } from './components/ui/Toast';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -36,25 +38,27 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          
-          <Route path="/" element={
-            <ProtectedRoute>
-              <AppShell />
-            </ProtectedRoute>
-          }>
-            <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="transactions" element={<Transactions />} />
-            <Route path="add" element={<AddTransaction />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="periods" element={<Periods />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <ToastProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            
+            <Route path="/" element={
+              <ProtectedRoute>
+                <AppShell />
+              </ProtectedRoute>
+            }>
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="transactions" element={<Transactions />} />
+              <Route path="add" element={<AddTransaction />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="periods" element={<Periods />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ToastProvider>
   );
 }

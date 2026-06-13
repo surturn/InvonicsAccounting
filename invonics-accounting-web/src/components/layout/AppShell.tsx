@@ -1,18 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import TopBar from './TopBar';
 
 export default function AppShell() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
-    <div className="flex h-screen w-full">
-      <div className="w-64 bg-bg-surface border-r border-bg-border">
-        {/* Sidebar placeholder */}
-        <div className="p-4 font-bold text-lg border-b border-bg-border">Invonics</div>
+    <div className="flex h-screen w-full bg-bg-base overflow-hidden">
+      {/* Mobile sidebar backdrop */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`
+        fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 lg:static lg:translate-x-0
+        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        <Sidebar onCloseMobile={() => setMobileMenuOpen(false)} />
       </div>
-      <div className="flex flex-col flex-1">
-        <header className="h-16 bg-bg-surface border-b border-bg-border flex items-center px-6">
-          {/* TopBar placeholder */}
-        </header>
-        <main className="flex-1 overflow-auto bg-bg-base p-6">
+
+      {/* Main Content Area */}
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <TopBar onMenuClick={() => setMobileMenuOpen(true)} />
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>
