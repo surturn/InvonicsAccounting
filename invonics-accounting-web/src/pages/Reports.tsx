@@ -141,7 +141,7 @@ export default function Reports() {
                   </h3>
                   {plLoading ? <Skeleton variant="rect" className="h-40" /> : (
                     <div className="space-y-3">
-                      {plData?.incomeRows.map((r, i) => (
+                      {plData?.incomeRows?.map((r, i) => (
                         <div key={i} className="flex justify-between text-sm border-b border-bg-border/50 pb-2">
                           <span className="text-text-secondary">{r.code} - {r.name}</span>
                           <span className="font-medium text-text-primary">{formatKES(r.total)}</span>
@@ -158,7 +158,7 @@ export default function Reports() {
                   </h3>
                   {plLoading ? <Skeleton variant="rect" className="h-40" /> : (
                     <div className="space-y-3">
-                      {plData?.expenseRows.map((r, i) => (
+                      {plData?.expenseRows?.map((r, i) => (
                         <div key={i} className="flex justify-between text-sm border-b border-bg-border/50 pb-2">
                           <span className="text-text-secondary">{r.code} - {r.name}</span>
                           <span className="font-medium text-text-primary">{formatKES(r.total)}</span>
@@ -272,7 +272,7 @@ export default function Reports() {
               {cfLoading ? <Skeleton variant="rect" className="h-64" /> : (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {cfData?.accounts.map(acc => {
+                    {cfData?.accounts?.map(acc => {
                       let Icon = Wallet;
                       if (acc.accountName.toLowerCase().includes('bank')) Icon = Building2;
                       if (acc.accountName.toLowerCase().includes('petty')) Icon = Coins;

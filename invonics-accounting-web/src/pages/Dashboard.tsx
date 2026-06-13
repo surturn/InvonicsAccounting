@@ -278,7 +278,7 @@ export default function Dashboard() {
         {cfLoading ? (
           Array.from({length:3}).map((_, i) => <Skeleton key={i} variant="rect" className="h-24" />)
         ) : (
-          cfData?.accounts.map(acc => {
+          cfData?.accounts?.map(acc => {
             let Icon = Wallet;
             if (acc.accountName.toLowerCase().includes('bank')) Icon = Building2;
             if (acc.accountName.toLowerCase().includes('petty')) Icon = Coins;
