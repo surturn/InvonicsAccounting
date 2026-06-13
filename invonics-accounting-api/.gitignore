@@ -1,4 +1,17 @@
-node_modules
-dist
-.env
+# Logs
+logs
 *.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Production
+dist/
+
+# Env files
+.env
+.env.local
+
+# OS files
+.DS_Store
