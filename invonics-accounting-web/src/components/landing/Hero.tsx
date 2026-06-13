@@ -15,35 +15,32 @@ export default function Hero() {
         <div className="w-full lg:w-1/2 text-left pr-0 lg:pr-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-text-inverse/20 bg-text-inverse/5 text-accent text-sm font-bold tracking-wide">
             <BarChart2 className="w-4 h-4" />
-            Guiding Your Financial Journey
+            Crafted for Kenyan freelancers & micro-businesses · KRA-compliant
           </div>
           
           <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1]">
-            Where Expertise <br className="hidden lg:block" />
-            Creates <span className="text-accent">Excellence</span>
+            Stop stressing over tax season and finally understand your business numbers.
           </h1>
           
           <p className="text-lg lg:text-xl text-text-inverse/80 mb-12 max-w-xl leading-relaxed">
-            Invonics Accounting is the precision-built system for modern businesses. Automate P&L generation, manage cash flow, and ensure tax compliance effortlessly.
+            Log income, track expenses, and auto-calculate your Turnover Tax from one simple dashboard. Built exclusively for Kenyan sole proprietors ready to ditch messy spreadsheets and WhatsApp notebooks forever.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <Link 
-              to="/signup" 
-              className="w-full sm:w-auto px-8 py-4 bg-accent hover:bg-accent-hover text-white rounded-full font-bold text-lg transition-all shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
-            >
-              Let's Get Started
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <div className="flex items-center gap-4 text-sm font-medium">
-              <div className="flex -space-x-3">
-                <img className="w-10 h-10 rounded-full border-2 border-bg-inverse" src="https://i.pravatar.cc/100?img=1" alt="User" />
-                <img className="w-10 h-10 rounded-full border-2 border-bg-inverse" src="https://i.pravatar.cc/100?img=2" alt="User" />
-                <img className="w-10 h-10 rounded-full border-2 border-bg-inverse" src="https://i.pravatar.cc/100?img=3" alt="User" />
-              </div>
-              <div className="text-text-inverse/80">
-                Join our<br/>growing team
-              </div>
+          <div className="flex flex-col items-start gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              <Link 
+                to="/signup" 
+                className="w-full sm:w-auto px-8 py-4 bg-accent hover:bg-accent-hover text-white rounded-full font-bold text-lg transition-all shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
+              >
+                Start your free trial
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <button className="w-full sm:w-auto px-8 py-4 bg-transparent border-2 border-text-inverse/30 hover:border-text-inverse text-white rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2">
+                See how it works
+              </button>
+            </div>
+            <div className="text-sm font-medium text-text-inverse/70 mt-2 pl-2">
+              100% free to start · No accountant required
             </div>
           </div>
         </div>

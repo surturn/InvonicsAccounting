@@ -89,10 +89,10 @@ export default function Login() {
           
           <div className="relative z-10 text-center text-text-inverse max-w-md">
             <h2 className="text-5xl font-extrabold tracking-tight mb-6 leading-tight">
-              Hello, Friend!
+              New Here?
             </h2>
             <p className="text-lg text-text-inverse/80 leading-relaxed mb-10">
-              Enter your personal details and start your journey with our modern financial tools tailored for growth.
+              Sign up and discover how our modern financial tools can accelerate your business growth.
             </p>
             <Link 
               to="/signup" 

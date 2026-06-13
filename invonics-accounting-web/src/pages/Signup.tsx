@@ -24,7 +24,7 @@ export default function Signup() {
         {/* Form Section */}
         <div className="w-full lg:w-1/2 p-8 lg:p-16 flex flex-col justify-center bg-bg-surface">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold text-text-primary tracking-tight mb-2">Create Account</h1>
+            <h1 className="text-4xl font-extrabold text-text-primary tracking-tight mb-2">Hello, Friend!</h1>
             <p className="text-text-secondary">Join Invonics and manage your finances</p>
           </div>
 

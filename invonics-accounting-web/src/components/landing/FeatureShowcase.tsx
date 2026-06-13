@@ -1,28 +1,43 @@
 import React from 'react';
-import { FileText, Smartphone, TrendingUp } from 'lucide-react';
+import { FileText, Calculator, Wallet, UploadCloud, FileSpreadsheet, Lock } from 'lucide-react';
 
 export default function FeatureShowcase() {
   const features = [
     {
-      title: 'Automated P&L Generation',
-      description: 'Stop wrestling with spreadsheets. Our system maps your income and expenses into compliant Profit & Loss statements instantly, giving you real-time visibility into your margins.',
-      icon: TrendingUp,
-      image: '/assets/mockups/reports.png',
-      align: 'right'
-    },
-    {
-      title: 'Mobile Wallet Integration',
-      description: 'Upload your mobile money PDF statements directly into the system. We parse, map, and reconcile transactions automatically so you never miss an entry.',
-      icon: Smartphone,
-      image: '/assets/mockups/dashboard.png', // Using dashboard as a placeholder for the flow
-      align: 'left'
-    },
-    {
-      title: 'Built-in Tax Compliance',
-      description: 'Kenya Revenue Authority TOT (Turnover Tax) is calculated automatically at 1.5%. Always know exactly what you owe and file on time with our dedicated reporting views.',
+      title: 'Double-entry ledger',
       icon: FileText,
-      image: '/assets/mockups/reports.png',
-      align: 'right'
+      description: 'Professional-grade accounting runs quietly in the background while you use a simple, plain-English interface. You never see debits or credits, just money in and money out.',
+      highlight: 'Every single entry is completely audit-ready.',
+    },
+    {
+      title: 'TOT Auto-Calculation',
+      icon: Calculator,
+      description: 'Turnover Tax is calculated automatically at 1.5% from your gross revenue so you never have to guess. Stay compliant and never miss the 20th of the month iTax deadline again.',
+      highlight: 'Know exactly the KES amount you owe.',
+    },
+    {
+      title: 'Income, Expense & Drawings',
+      icon: Wallet,
+      description: "Track the only three transaction types that matter for a sole proprietor's financial health. We keep your personal owner withdrawals completely separate from deductible business expenses.",
+      highlight: 'Stop ruining your P&L by recording drawings as expenses.',
+    },
+    {
+      title: 'Mobile Wallet Statement Importer',
+      icon: UploadCloud,
+      description: 'Upload your mobile money PDF statement and our system intelligently parses and categorizes the data. Review and import hundreds of business transactions into your ledger with a single click.',
+      highlight: 'Save hours of manual data entry every month.',
+    },
+    {
+      title: 'Accountant-Ready Exports',
+      icon: FileSpreadsheet,
+      description: 'Download your Profit & Loss summaries and full transaction histories as clean CSV or Excel files. The data is structured exactly how financial professionals need it at year-end.',
+      highlight: 'Drastically reduce your annual iTax return prep time.',
+    },
+    {
+      title: 'Period Locking',
+      icon: Lock,
+      description: 'Lock a specific month immediately after filing your TOT to prevent any accidental edits. Historical corrections can only be made via reversing entries to maintain a perfectly clean audit trail.',
+      highlight: 'Absolute legal protection for your historical financial records.',
     }
   ];
 
@@ -31,47 +46,31 @@ export default function FeatureShowcase() {
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <div className="inline-block px-4 py-1.5 rounded-full bg-accent/10 text-accent font-bold text-sm mb-4">
-            About Us
+            Features
           </div>
           <h2 className="text-4xl lg:text-5xl font-extrabold text-text-primary mb-6 tracking-tight">
-            The Best Finance <br className="hidden sm:block" /> Consultant In Town
+            Everything you need. <br className="hidden sm:block" /> Nothing you don't.
           </h2>
           <p className="text-lg text-text-secondary leading-relaxed">
-            Every tool you need to run your finances like a tech-forward enterprise, seamlessly blending tradition with innovation.
+            Every tool you need to run your finances like a tech-forward enterprise, built specifically for the Kenyan context.
           </p>
         </div>
 
-        <div className="space-y-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, idx) => (
-            <div key={idx} className={`flex flex-col lg:flex-row items-center gap-16 ${feature.align === 'left' ? 'lg:flex-row-reverse' : ''}`}>
-              
-              <div className="flex-1 space-y-6">
-                <div className="w-16 h-16 rounded-3xl bg-accent/10 flex items-center justify-center text-accent">
-                  <feature.icon className="w-8 h-8" />
-                </div>
-                <h3 className="text-3xl font-extrabold text-text-primary tracking-tight">{feature.title}</h3>
-                <p className="text-lg text-text-secondary leading-relaxed">
-                  {feature.description}
+            <div key={idx} className="bg-bg-surface border border-bg-border rounded-[2rem] p-8 shadow-xl hover:shadow-2xl transition-shadow flex flex-col group">
+              <div className="w-14 h-14 rounded-2xl bg-bg-base border border-bg-border flex items-center justify-center text-text-primary mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+                <feature.icon className="w-6 h-6" />
+              </div>
+              <h3 className="text-2xl font-extrabold text-text-primary mb-4 tracking-tight">{feature.title}</h3>
+              <p className="text-text-secondary leading-relaxed mb-6 flex-1">
+                {feature.description}
+              </p>
+              <div className="mt-auto pt-6 border-t border-bg-border">
+                <p className="text-sm font-bold text-accent">
+                  {feature.highlight}
                 </p>
-                <button className="px-6 py-3 rounded-full bg-bg-inverse text-white font-bold hover:bg-bg-inverse/90 transition-colors flex items-center gap-2 mt-4">
-                  Learn More <span className="text-accent">→</span>
-                </button>
               </div>
-
-              <div className="flex-1 w-full">
-                <div className="relative p-4">
-                  {/* Soft background shape */}
-                  <div className={`absolute inset-0 bg-accent/5 rounded-[3rem] ${feature.align === 'left' ? '-translate-x-8 translate-y-8' : 'translate-x-8 translate-y-8'}`} />
-                  <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-bg-border bg-white">
-                    <img 
-                      src={feature.image} 
-                      alt={feature.title} 
-                      className="w-full h-auto"
-                    />
-                  </div>
-                </div>
-              </div>
-
             </div>
           ))}
         </div>
