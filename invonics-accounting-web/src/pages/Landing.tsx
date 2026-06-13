@@ -81,9 +81,14 @@ export default function Landing() {
                 <p className="font-bold text-text-primary mb-2">Email</p>
                 <a href="mailto:accounting@invonicstechnologies.com" className="text-accent hover:underline text-sm font-medium">accounting@invonicstechnologies.com</a>
               </div>
-              <div className="p-6 bg-bg-surface rounded-2xl border border-bg-border">
-                <p className="font-bold text-text-primary mb-2">WhatsApp</p>
-                <p className="text-text-secondary text-sm font-medium">Fastest response channel for Kenyan users</p>
+              <div className="p-6 bg-bg-surface rounded-2xl border border-bg-border flex flex-col justify-between">
+                <div>
+                  <p className="font-bold text-text-primary mb-2">WhatsApp</p>
+                  <p className="text-text-secondary text-sm font-medium mb-2">Fastest response channel for Kenyan users</p>
+                </div>
+                <a href="https://wa.me/254786669572" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline text-sm font-medium block">
+                  +254 786 669 572
+                </a>
               </div>
               <div className="p-6 bg-bg-surface rounded-2xl border border-bg-border">
                 <p className="font-bold text-text-primary mb-2">Built by</p>
