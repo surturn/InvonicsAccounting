@@ -38,12 +38,12 @@ export function Input({
         <input
           id={inputId}
           className={cn(
-            'w-full bg-bg-elevated border rounded-lg px-3 py-2 text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-2',
-            leftIcon ? 'pl-10' : '',
-            rightIcon ? 'pr-10' : '',
+            'w-full bg-bg-elevated rounded-full px-4 py-3 text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-2 border-none',
+            leftIcon ? 'pl-12' : '',
+            rightIcon ? 'pr-12' : '',
             error
-              ? 'border-danger focus:ring-danger focus:border-danger'
-              : 'border-bg-border focus:ring-accent focus:border-transparent',
+              ? 'focus:ring-danger'
+              : 'focus:ring-accent/50',
             className
           )}
           {...props}

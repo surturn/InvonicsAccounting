@@ -8,29 +8,36 @@ export default {
     extend: {
       colors: {
         bg: {
-          base: '#0F1117',      
-          surface: '#1A1D27',   
-          elevated: '#21253A',  
-          border: '#2E3250'     
+          base: '#FDFBF7',      
+          surface: '#FFFFFF',   
+          elevated: '#F4EFE6',  
+          border: '#E5E7EB',
+          inverse: '#1A2922'
         },
         text: {
-          primary: '#F0F2F8',
-          secondary: '#8B90A0',
-          muted: '#555B7A'
+          primary: '#2A2A2A',
+          secondary: '#6B7280',
+          muted: '#9CA3AF',
+          inverse: '#FFFFFF'
         },
         accent: {
-          DEFAULT: '#00C896',   
-          hover: '#00A87E',
-          subtle: '#00C89615'   
+          DEFAULT: '#C25934',   
+          hover: '#A84A2A',
+          subtle: '#C2593415'   
         },
         danger: {
-          DEFAULT: '#EF4444',
-          subtle: '#EF444415'
+          DEFAULT: '#DC2626',
+          subtle: '#DC262615'
         },
         warning: {
-          DEFAULT: '#F59E0B',
-          subtle: '#F59E0B15'
+          DEFAULT: '#D97706',
+          subtle: '#D9770615'
         }
+      },
+      borderRadius: {
+        '4xl': '2rem',
+        '5xl': '2.5rem',
+        '6xl': '3rem',
       },
       fontFamily: { 
         sans: ['Inter', 'sans-serif'] 

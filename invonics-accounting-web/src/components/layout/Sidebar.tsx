@@ -41,9 +41,9 @@ export default function Sidebar({ onCloseMobile }: SidebarProps) {
             to={link.path}
             onClick={onCloseMobile}
             className={({ isActive }) => `
-              flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+              flex items-center gap-3 px-4 py-3 rounded-full text-sm font-bold transition-all
               ${isActive 
-                ? 'bg-accent-subtle text-accent' 
+                ? 'bg-accent text-white shadow-lg shadow-accent/20' 
                 : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
               }
             `}
