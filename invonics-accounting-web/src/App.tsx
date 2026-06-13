@@ -25,11 +25,11 @@ const queryClient = new QueryClient({
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   
-  // TODO: implement actual loading state handling
-  // For now, assume authenticated for scaffolding
-  const isAuthenticated = true;
+  if (isLoading) {
+    return <div className="h-screen w-screen flex items-center justify-center bg-bg-base text-text-secondary">Loading...</div>;
+  }
   
-  if (!isAuthenticated) {
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
   
