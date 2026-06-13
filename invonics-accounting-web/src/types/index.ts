@@ -105,6 +105,9 @@ export interface TransactionFilters {
   from?: string;
   to?: string;
   partyId?: number;
+  search?: string;
+  type?: string;
+  accountId?: number;
 }
 
 export interface CreateIncomeBody {
@@ -125,4 +128,5 @@ export interface CreateDrawingBody {
   date: string;
   narration: string;
   amount: number;
+  cashAccountId?: number;
 }

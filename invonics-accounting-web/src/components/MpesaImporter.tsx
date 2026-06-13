@@ -1,0 +1,244 @@
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp, Upload, CheckCircle } from 'lucide-react';
+import { Card } from './ui/Card';
+import { Button } from './ui/Button';
+import { Table } from './ui/Table';
+import { Badge } from './ui/Badge';
+import { Select } from './ui/Select';
+import { useToast } from './ui/Toast';
+import { parseMpesaPDF } from '../api/tools';
+import { useAccounts } from '../hooks/useAccounts';
+import { useCreateIncome, useCreateExpense } from '../hooks/useTransactions';
+import { formatKES, formatDate } from '../utils/format';
+import { useQueryClient } from '@tanstack/react-query';
+
+export function MpesaImporter() {
+  const [expanded, setExpanded] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [parsing, setParsing] = useState(false);
+  const [parsedTxs, setParsedTxs] = useState<any[]>([]);
+  
+  const [importing, setImporting] = useState(false);
+  const [importProgress, setImportProgress] = useState(0);
+
+  const { data: accounts } = useAccounts();
+  const { mutateAsync: createIncome } = useCreateIncome();
+  const { mutateAsync: createExpense } = useCreateExpense();
+  const queryClient = useQueryClient();
+  const { success, error } = useToast();
+
+  const incomeAccounts = accounts?.filter(a => a.type === 'income') || [];
+  const expenseAccounts = accounts?.filter(a => a.type === 'expense') || [];
+  const mpesaAccount = accounts?.find(a => a.code === '1001');
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleParse = async () => {
+    if (!file) return;
+    setParsing(true);
+    try {
+      const res = await parseMpesaPDF(file);
+      if (res.transactions) {
+        setParsedTxs(res.transactions.map((t: any, i: number) => ({
+          ...t,
+          id: i,
+          selected: true,
+          categoryId: '',
+          cashAccountId: mpesaAccount?.id?.toString() || ''
+        })));
+      }
+    } catch (err) {
+      error('Failed to parse statement');
+    } finally {
+      setParsing(false);
+    }
+  };
+
+  const handleToggleSelect = (id: number) => {
+    setParsedTxs(prev => prev.map(t => t.id === id ? { ...t, selected: !t.selected } : t));
+  };
+
+  const handleSelectAll = (select: boolean) => {
+    setParsedTxs(prev => prev.map(t => ({ ...t, selected: select })));
+  };
+
+  const handleChangeCategory = (id: number, val: string) => {
+    setParsedTxs(prev => prev.map(t => t.id === id ? { ...t, categoryId: val } : t));
+  };
+
+  const handleChangeCashAccount = (id: number, val: string) => {
+    setParsedTxs(prev => prev.map(t => t.id === id ? { ...t, cashAccountId: val } : t));
+  };
+
+  const handleImport = async () => {
+    const selected = parsedTxs.filter(t => t.selected);
+    if (selected.length === 0) return;
+
+    // Validate
+    for (const t of selected) {
+      if (!t.categoryId) {
+        error('Please select a category for all selected transactions');
+        return;
+      }
+      if (!t.cashAccountId) {
+        error('Please select a cash account for all selected transactions');
+        return;
+      }
+    }
+
+    setImporting(true);
+    setImportProgress(0);
+
+    try {
+      for (let i = 0; i < selected.length; i++) {
+        const t = selected[i];
+        const isMoneyIn = t.amount > 0;
+        const absAmount = Math.abs(t.amount);
+        
+        const payload = {
+          date: t.date,
+          narration: `[M-Pesa] ${t.description} ${t.party ? '- ' + t.party : ''}`,
+          lines: isMoneyIn ? [
+            { accountId: Number(t.cashAccountId), amount: absAmount }, // DR Cash
+            { accountId: Number(t.categoryId), amount: absAmount } // CR Income
+          ] : [
+            { accountId: Number(t.categoryId), amount: absAmount }, // DR Expense
+            { accountId: Number(t.cashAccountId), amount: absAmount } // CR Cash
+          ]
+        };
+
+        if (isMoneyIn) {
+          await createIncome(payload as any);
+        } else {
+          await createExpense(payload as any);
+        }
+        
+        setImportProgress(i + 1);
+      }
+
+      success(`Successfully imported ${selected.length} transactions`);
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      
+      // Reset state
+      setFile(null);
+      setParsedTxs([]);
+      setExpanded(false);
+      
+    } catch (err) {
+      error('An error occurred during import');
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const columns = [
+    { key: 'select', header: '', render: (t: any) => (
+      <input type="checkbox" checked={t.selected} onChange={() => handleToggleSelect(t.id)} />
+    )},
+    { key: 'date', header: 'Date', render: (t: any) => formatDate(t.date) },
+    { key: 'description', header: 'Description' },
+    { key: 'party', header: 'Party' },
+    { key: 'amount', header: 'Amount', render: (t: any) => (
+      <span className={`font-medium ${t.amount > 0 ? 'text-accent' : 'text-danger'}`}>
+        {t.amount > 0 ? '+' : ''}{formatKES(t.amount)}
+      </span>
+    )},
+    { key: 'type', header: 'Type', render: (t: any) => (
+      <Badge variant={t.amount > 0 ? 'income' : 'expense'}>{t.amount > 0 ? 'Money In' : 'Money Out'}</Badge>
+    )},
+    { key: 'mappings', header: 'Mapping', render: (t: any) => (
+      t.selected ? (
+        <div className="flex gap-2">
+          <Select 
+            value={t.categoryId} 
+            onChange={(e) => handleChangeCategory(t.id, e.target.value)}
+            options={[
+              { label: 'Category...', value: '' },
+              ...(t.amount > 0 ? incomeAccounts : expenseAccounts).map(a => ({ label: a.name, value: a.id.toString() }))
+            ]}
+          />
+          <Select 
+            value={t.cashAccountId} 
+            onChange={(e) => handleChangeCashAccount(t.id, e.target.value)}
+            options={[
+              { label: 'Cash Acc...', value: '' },
+              ...(accounts?.filter(a => ['asset'].includes(a.type) && !a.is_turnover) || []).map(a => ({ label: a.name, value: a.id.toString() }))
+            ]}
+          />
+        </div>
+      ) : <span className="text-text-muted text-xs">Ignored</span>
+    )}
+  ];
+
+  return (
+    <Card padding="none" className="overflow-hidden mb-6">
+      <div 
+        className="p-4 border-b border-bg-border flex justify-between items-center cursor-pointer hover:bg-bg-base transition-colors"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <h3 className="text-base font-semibold text-text-primary">Import from M-Pesa Statement</h3>
+        {expanded ? <ChevronUp className="w-5 h-5 text-text-secondary" /> : <ChevronDown className="w-5 h-5 text-text-secondary" />}
+      </div>
+      
+      {expanded && (
+        <div className="p-6">
+          {parsedTxs.length === 0 ? (
+            <div className="space-y-4">
+              <div className="border-2 border-dashed border-bg-border bg-bg-elevated rounded-xl p-8 text-center">
+                <Upload className="w-8 h-8 text-text-secondary mx-auto mb-3" />
+                <p className="text-text-primary font-medium mb-1">Drop your M-Pesa PDF statement here</p>
+                <p className="text-text-muted text-sm mb-4">or click to browse</p>
+                <input 
+                  type="file" 
+                  accept="application/pdf"
+                  onChange={handleFileChange}
+                  className="block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-bg-surface file:text-accent hover:file:bg-bg-border cursor-pointer mx-auto max-w-xs"
+                />
+                {file && (
+                  <p className="mt-4 text-sm text-accent">Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</p>
+                )}
+              </div>
+              <Button 
+                onClick={handleParse} 
+                loading={parsing} 
+                disabled={!file}
+                className="w-full"
+              >
+                {parsing ? 'Parsing with AI...' : 'Parse Statement'}
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h4 className="font-semibold text-text-primary">Found {parsedTxs.length} transactions</h4>
+                <div className="space-x-2">
+                  <Button variant="ghost" size="sm" onClick={() => handleSelectAll(true)}>Select All</Button>
+                  <Button variant="ghost" size="sm" onClick={() => handleSelectAll(false)}>Deselect All</Button>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <Table columns={columns} data={parsedTxs} />
+              </div>
+
+              <div className="pt-4 flex justify-between items-center border-t border-bg-border">
+                <Button variant="secondary" onClick={() => setParsedTxs([])}>Cancel</Button>
+                <Button 
+                  onClick={handleImport} 
+                  loading={importing}
+                  disabled={parsedTxs.filter(t => t.selected).length === 0}
+                >
+                  {importing ? `Importing ${importProgress} of ${parsedTxs.filter(t => t.selected).length}...` : `Import ${parsedTxs.filter(t => t.selected).length} Selected`}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </Card>
+  );
+}
