@@ -87,7 +87,7 @@ export default function Landing() {
               </div>
               <div className="p-6 bg-bg-surface rounded-2xl border border-bg-border">
                 <p className="font-bold text-text-primary mb-2">Built by</p>
-                <a href="#" className="text-accent hover:underline text-sm font-medium">Invonics Technologies, Nairobi Kenya</a>
+                <a href="https://invonicstechnologies.com" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline text-sm font-medium">Invonics Technologies, Nairobi Kenya</a>
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function Landing() {
               <div className="flex flex-col gap-4">
                 <a href="#" className="text-text-secondary hover:text-accent font-medium transition-colors">Privacy Policy</a>
                 <a href="#" className="text-text-secondary hover:text-accent font-medium transition-colors">Terms of Use</a>
-                <a href="#" className="text-accent font-bold flex items-center gap-1 hover:text-accent-hover transition-colors">
+                <a href="https://invonicstechnologies.com" target="_blank" rel="noopener noreferrer" className="text-accent font-bold flex items-center gap-1 hover:text-accent-hover transition-colors">
                   Invonics Technologies <span className="text-lg leading-none">↗</span>
                 </a>
               </div>

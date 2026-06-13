@@ -57,11 +57,7 @@ export default function Hero() {
               />
             </div>
             
-            {/* Floating Badge */}
-            <div className="absolute bottom-4 left-0 bg-accent text-white p-6 rounded-3xl shadow-xl flex flex-col items-center justify-center transform -rotate-3 z-20">
-              <span className="text-3xl font-extrabold">25+</span>
-              <span className="text-sm font-medium opacity-90">Years Experience</span>
-            </div>
+
           </div>
         </div>
       </div>

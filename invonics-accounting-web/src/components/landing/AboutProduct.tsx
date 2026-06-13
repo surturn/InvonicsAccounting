@@ -60,7 +60,7 @@ export default function AboutProduct() {
                 <p className="text-text-primary font-medium leading-relaxed mb-4">
                   Built by Invonics Technologies, a Nairobi-based software development team. We are the same engineers behind the RSVP platform and custom automation tools for growing Kenyan businesses.
                 </p>
-                <a href="#" className="inline-flex items-center gap-2 text-accent font-bold hover:text-accent-hover transition-colors">
+                <a href="https://invonicstechnologies.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-accent font-bold hover:text-accent-hover transition-colors">
                   Learn about Invonics Technologies <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
