@@ -74,8 +74,9 @@ export default function Reports() {
     }}
   ];
 
-  const tbTotalDebits = tbData?.reduce((s, r) => s + Number(r.total_debits || 0), 0) || 0;
-  const tbTotalCredits = tbData?.reduce((s, r) => s + Number(r.total_credits || 0), 0) || 0;
+  const safeTbData = Array.isArray(tbData) ? tbData : [];
+  const tbTotalDebits = safeTbData.reduce((s, r) => s + Number(r.total_debits || 0), 0);
+  const tbTotalCredits = safeTbData.reduce((s, r) => s + Number(r.total_credits || 0), 0);
   const isBalanced = Math.abs(tbTotalDebits - tbTotalCredits) < 0.01;
 
   return (

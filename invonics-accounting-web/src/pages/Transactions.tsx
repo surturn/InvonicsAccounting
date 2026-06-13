@@ -32,7 +32,7 @@ export default function Transactions() {
 
   const { data: accountsData } = useAccounts();
   const accountOptions = useMemo(() => {
-    if (!accountsData) return [];
+    if (!Array.isArray(accountsData)) return [];
     return [
       { label: 'All Categories', value: '' },
       ...accountsData.filter(a => a.type === 'income' || a.type === 'expense').map(a => ({

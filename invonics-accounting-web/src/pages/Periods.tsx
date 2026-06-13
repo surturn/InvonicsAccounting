@@ -67,7 +67,7 @@ export default function Periods() {
       <Card padding="none" className="overflow-hidden">
         <Table 
           columns={columns}
-          data={periods || []}
+          data={Array.isArray(periods) ? periods : []}
           loading={isLoading}
         />
       </Card>

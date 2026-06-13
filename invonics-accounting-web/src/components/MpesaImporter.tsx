@@ -27,9 +27,10 @@ export function MpesaImporter() {
   const queryClient = useQueryClient();
   const { success, error } = useToast();
 
-  const incomeAccounts = accounts?.filter(a => a.type === 'income') || [];
-  const expenseAccounts = accounts?.filter(a => a.type === 'expense') || [];
-  const mpesaAccount = accounts?.find(a => a.code === '1001');
+  const safeAccounts = Array.isArray(accounts) ? accounts : [];
+  const incomeAccounts = safeAccounts.filter(a => a.type === 'income');
+  const expenseAccounts = safeAccounts.filter(a => a.type === 'expense');
+  const mpesaAccount = safeAccounts.find(a => a.code === '1001');
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -166,7 +167,7 @@ export function MpesaImporter() {
             onChange={(e) => handleChangeCashAccount(t.id, e.target.value)}
             options={[
               { label: 'Cash Acc...', value: '' },
-              ...(accounts?.filter(a => ['asset'].includes(a.type) && !a.is_turnover) || []).map(a => ({ label: a.name, value: a.id.toString() }))
+              ...safeAccounts.filter(a => ['asset'].includes(a.type) && !a.is_turnover).map(a => ({ label: a.name, value: a.id.toString() }))
             ]}
           />
         </div>

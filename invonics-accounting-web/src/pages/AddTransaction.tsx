@@ -45,10 +45,10 @@ export default function AddTransaction() {
   // Validation state
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Options
-  const incomeAccounts = accounts?.filter(a => a.type === 'income') || [];
-  const expenseAccounts = accounts?.filter(a => a.type === 'expense') || [];
-  const cashAccounts = accounts?.filter(a => ['asset'].includes(a.type) && !a.is_turnover) || [];
+  const safeAccounts = Array.isArray(accounts) ? accounts : [];
+  const incomeAccounts = safeAccounts.filter(a => a.type === 'income');
+  const expenseAccounts = safeAccounts.filter(a => a.type === 'expense');
+  const cashAccounts = safeAccounts.filter(a => ['asset'].includes(a.type) && !a.is_turnover);
   
   const incomeCashAccounts = cashAccounts.filter(a => ['1001', '1002', '1003', '1004'].includes(a.code));
   const expenseCashAccounts = cashAccounts.filter(a => ['1001', '1002', '1003'].includes(a.code));
