@@ -84,7 +84,7 @@ router.post('/income', validate(incomeSchema), async (req, res, next) => {
 const expenseSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   amount: z.number().positive(),
-  expenseAccountCode: z.string().regex(/^5\d{3}$/),
+  expenseAccountCode: z.string().regex(/^[56]\d{3}$/),
   cashAccountCode: z.enum(['1001','1002','1003']),
   partyId: z.number().optional(),
   reference: z.string().optional(),
