@@ -6,7 +6,5 @@ export const parseMpesaPDF = (file: File, password?: string): Promise<{ transact
   if (password) {
     formData.append('password', password);
   }
-  return client.post('/tools/parse-mpesa-statement', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }).then((r: any) => r.data);
+  return client.post('/tools/parse-mpesa-statement', formData).then((r: any) => r.data);
 };
