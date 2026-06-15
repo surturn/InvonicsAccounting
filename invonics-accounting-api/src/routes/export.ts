@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { getTransactionsForExport, getPLReport } from '../db/queries/reports';
 import { generateTransactionCSV, generatePLCSV } from '../services/exportService';
-import { authenticateToken } from '../middleware/auth';
+
 
 const router = Router();
 
@@ -12,7 +12,7 @@ const dateQuerySchema = z.object({
   type: z.string().optional()
 });
 
-router.use(authenticateToken);
+
 
 router.get('/transactions', async (req, res, next) => {
   try {

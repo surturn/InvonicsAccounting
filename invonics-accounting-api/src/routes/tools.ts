@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
-import Anthropic from '@anthropic-ai/sdk';
-import { authenticateToken } from '../middleware/auth';
+import OpenAI from 'openai';
 
 const router = Router();
 
@@ -14,7 +13,7 @@ const upload = multer({
   }
 });
 
-router.post('/parse-mpesa-statement', authenticateToken, (req, res, next) => {
+router.post('/parse-mpesa-statement', (req, res, next) => {
   upload.single('pdf')(req, res, async (err) => {
     if (err) {
       return res.status(400).json({ error: err.message });
@@ -26,47 +25,51 @@ router.post('/parse-mpesa-statement', authenticateToken, (req, res, next) => {
       }
 
       const base64Pdf = req.file.buffer.toString('base64');
-      const anthropic = new Anthropic({
-        apiKey: process.env.ANTHROPIC_API_KEY
-      });
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-      const message = await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 4000,
-        messages: [
+      const response = await openai.responses.create({
+        model: 'gpt-4o',
+        input: [
           {
             role: 'user',
             content: [
               {
-                type: 'document',
-                source: {
-                  type: 'base64',
-                  media_type: 'application/pdf',
-                  data: base64Pdf
-                }
-              } as any,
+                type: 'input_file',
+                filename: 'mpesa-statement.pdf',
+                file_data: `data:application/pdf;base64,${base64Pdf}`,
+              },
               {
-                type: 'text',
-                text: "Extract all transactions from this M-Pesa statement. Return ONLY a valid JSON array, no markdown, no explanation. Each object: { date: 'YYYY-MM-DD', description: string, amount: number (positive=money in, negative=money out), balance: number, type: 'in'|'out', party: string }"
-              }
-            ]
-          }
-        ]
+                type: 'input_text',
+                text: `You are a financial data extraction assistant. Extract all transactions 
+from this M-Pesa statement PDF and return them as a JSON array.
+
+Each transaction object must have exactly these fields:
+{
+  "date": "YYYY-MM-DD",
+  "description": "string — the full transaction description as shown",
+  "amount": number — positive value always,
+  "type": "credit" or "debit",
+  "balance": number or null
+}
+
+Rules:
+- "credit" means money received into M-Pesa (income)
+- "debit" means money sent out of M-Pesa (expense)
+- Do not include the opening or closing balance rows as transactions
+- Do not include failed or reversed transactions
+- Return ONLY a valid JSON array. No explanation, no markdown, no code fences.`,
+              },
+            ],
+          },
+        ],
       });
 
-      const responseText = (message.content[0] as Anthropic.TextBlock).text;
-      const stripped = responseText.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
-      
-      let parsed;
-      try {
-        parsed = JSON.parse(stripped);
-      } catch (parseErr) {
-        return res.status(422).json({ error: 'Could not parse statement' });
-      }
+      const raw = response.output_text;
+      const transactions = JSON.parse(raw);
 
       return res.status(200).json({
-        transactions: parsed,
-        count: Array.isArray(parsed) ? parsed.length : 0
+        transactions,
+        count: Array.isArray(transactions) ? transactions.length : 0
       });
 
     } catch (error) {

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { getPLReport, getTOTReport, getTrialBalance, getCashFlow } from '../db/queries/reports';
-import { authenticateToken } from '../middleware/auth';
+
 
 const router = Router();
 
@@ -10,7 +10,7 @@ const dateQuerySchema = z.object({
   to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
 });
 
-router.use(authenticateToken);
+
 
 router.get('/pl', async (req, res, next) => {
   try {

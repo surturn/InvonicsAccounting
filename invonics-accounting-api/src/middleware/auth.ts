@@ -7,10 +7,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     return res.status(401).json({ error: 'Authentication required' });
   }
 
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    return res.status(500).json({ error: 'Server configuration error' });
-  }
+  const secret = process.env.JWT_SECRET!;
 
   jwt.verify(token, secret, (err: any, decoded: any) => {
     if (err) {
