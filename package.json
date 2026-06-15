@@ -36,6 +36,7 @@
     "@types/node": "^20.x",
     "@types/node-cron": "^3.0.x",
     "@types/nodemailer": "^6.4.x",
+    "@types/pdf-parse": "^1.1.5",
     "@types/pg": "^8.10.x",
     "ts-node-dev": "^2.0.x",
     "typescript": "^5.3.x"

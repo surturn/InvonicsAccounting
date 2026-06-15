@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import OpenAI from 'openai';
-import pdfParse from 'pdf-parse';
+const pdfParse = require('pdf-parse');
 
 const router = Router();
 
