@@ -41,7 +41,7 @@ export function MpesaImporter() {
 
   const handleParse = async () => {
     if (!file) return;
-    if (!password) {
+    if (file.type === 'application/pdf' && !password) {
       error('Please enter the PDF password to decrypt it');
       return;
     }
@@ -197,24 +197,26 @@ export function MpesaImporter() {
             <div className="space-y-4">
               <div className="border-2 border-dashed border-bg-border bg-bg-elevated rounded-xl p-8 text-center">
                 <Upload className="w-8 h-8 text-text-secondary mx-auto mb-3" />
-                <p className="text-text-primary font-medium mb-1">Drop your M-Pesa PDF statement here</p>
+                <p className="text-text-primary font-medium mb-1">Drop your M-Pesa PDF or Image screenshot here</p>
                 <p className="text-text-muted text-sm mb-4">or click to browse</p>
                 <input 
                   type="file" 
-                  accept="application/pdf"
+                  accept="application/pdf,image/*"
                   onChange={handleFileChange}
                   className="block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-bg-surface file:text-accent hover:file:bg-bg-border cursor-pointer mx-auto max-w-xs"
                 />
                 {file && (
                   <div className="mt-4 space-y-3 max-w-xs mx-auto">
                     <p className="text-sm text-accent">Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</p>
-                    <input
-                      type="password"
-                      placeholder="M-Pesa Password / ID Number"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-2 border border-bg-border rounded-lg bg-bg-base text-sm text-text-primary focus:outline-none focus:border-accent"
-                    />
+                    {file.type === 'application/pdf' && (
+                      <input
+                        type="password"
+                        placeholder="M-Pesa Password / ID Number"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-4 py-2 border border-bg-border rounded-lg bg-bg-base text-sm text-text-primary focus:outline-none focus:border-accent"
+                      />
+                    )}
                   </div>
                 )}
               </div>
