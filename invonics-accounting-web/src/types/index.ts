@@ -74,6 +74,14 @@ export interface TrialBalanceRow {
   net_balance: number;
 }
 
+export interface TrialBalanceReport {
+  rows: TrialBalanceRow[];
+  totals: {
+    debits: number;
+    credits: number;
+  };
+}
+
 export interface CashFlowReport {
   accounts: {
     accountCode: string;
