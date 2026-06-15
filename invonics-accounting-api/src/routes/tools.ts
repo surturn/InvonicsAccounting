@@ -32,6 +32,20 @@ router.post('/parse-mpesa-statement', (req, res, next) => {
       const isImage = isImageMime || isImageExt;
       const password = req.body.password;
       
+      let accountsInfo = '';
+      if (req.body.accounts) {
+        try {
+          const accs = JSON.parse(req.body.accounts);
+          accountsInfo = `
+Chart of Accounts available for mapping:
+Income Accounts: ${JSON.stringify(accs.income?.map((a: any) => ({ id: a.id, name: a.name })) || [])}
+Expense Accounts: ${JSON.stringify(accs.expense?.map((a: any) => ({ id: a.id, name: a.name })) || [])}
+
+For each transaction, intelligently assign the most appropriate 'categoryId' (integer) from the provided Chart of Accounts. If you aren't sure, use null.
+`;
+        } catch(e) {}
+      }
+      
       if (!isImage && !password) {
         return res.status(400).json({ error: 'Password is required to decrypt the M-Pesa statement PDF' });
       }
@@ -73,7 +87,8 @@ Each transaction object must have exactly these fields:
   "description": "string — the full transaction description as shown",
   "amount": number — positive value always,
   "type": "credit" or "debit",
-  "balance": number or null
+  "balance": number or null,
+  "categoryId": number or null
 }
 
 Rules:
@@ -81,7 +96,8 @@ Rules:
 - "debit" means money sent out of M-Pesa (expense)
 - Do not include the opening or closing balance rows as transactions
 - Do not include failed or reversed transactions
-- Return ONLY a valid JSON array. No explanation, no markdown, no code fences.`,
+- Return ONLY a valid JSON array. No explanation, no markdown, no code fences.
+${accountsInfo}`,
           },
         ];
       } else {
@@ -113,7 +129,8 @@ Each transaction object must have exactly these fields:
   "description": "string — the full transaction description as shown",
   "amount": number — positive value always,
   "type": "credit" or "debit",
-  "balance": number or null
+  "balance": number or null,
+  "categoryId": number or null
 }
 
 Rules:
@@ -121,7 +138,8 @@ Rules:
 - "debit" means money sent out of M-Pesa (expense)
 - Do not include the opening or closing balance rows as transactions
 - Do not include failed or reversed transactions
-- Return ONLY a valid JSON array. No explanation, no markdown, no code fences.`
+- Return ONLY a valid JSON array. No explanation, no markdown, no code fences.
+${accountsInfo}`
               },
               {
                 type: 'image_url',

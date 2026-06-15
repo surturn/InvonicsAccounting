@@ -47,7 +47,7 @@ export function MpesaImporter() {
     }
     setParsing(true);
     try {
-      const res = await parseMpesaPDF(file, password);
+      const res = await parseMpesaPDF(file, password, { income: incomeAccounts, expense: expenseAccounts });
       if (res.transactions) {
         setParsedTxs(res.transactions.map((t: any, i: number) => {
           // AI might return positive amount with type 'debit', or negative amount
@@ -59,7 +59,7 @@ export function MpesaImporter() {
             id: i,
             amount: finalAmount,
             selected: true,
-            categoryId: '',
+            categoryId: t.categoryId ? t.categoryId.toString() : '',
             cashAccountId: mpesaAccount?.id?.toString() || ''
           };
         }));
