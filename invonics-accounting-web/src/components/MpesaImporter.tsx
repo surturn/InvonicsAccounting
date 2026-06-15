@@ -15,6 +15,7 @@ import { useQueryClient } from '@tanstack/react-query';
 export function MpesaImporter() {
   const [expanded, setExpanded] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [password, setPassword] = useState('');
   const [parsing, setParsing] = useState(false);
   const [parsedTxs, setParsedTxs] = useState<any[]>([]);
   
@@ -40,9 +41,13 @@ export function MpesaImporter() {
 
   const handleParse = async () => {
     if (!file) return;
+    if (!password) {
+      error('Please enter the PDF password to decrypt it');
+      return;
+    }
     setParsing(true);
     try {
-      const res = await parseMpesaPDF(file);
+      const res = await parseMpesaPDF(file, password);
       if (res.transactions) {
         setParsedTxs(res.transactions.map((t: any, i: number) => ({
           ...t,
@@ -52,8 +57,8 @@ export function MpesaImporter() {
           cashAccountId: mpesaAccount?.id?.toString() || ''
         })));
       }
-    } catch (err) {
-      error('Failed to parse statement');
+    } catch (err: any) {
+      error(err.response?.data?.error || 'Failed to parse statement');
     } finally {
       setParsing(false);
     }
@@ -126,6 +131,7 @@ export function MpesaImporter() {
       
       // Reset state
       setFile(null);
+      setPassword('');
       setParsedTxs([]);
       setExpanded(false);
       
@@ -200,7 +206,16 @@ export function MpesaImporter() {
                   className="block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-bg-surface file:text-accent hover:file:bg-bg-border cursor-pointer mx-auto max-w-xs"
                 />
                 {file && (
-                  <p className="mt-4 text-sm text-accent">Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</p>
+                  <div className="mt-4 space-y-3 max-w-xs mx-auto">
+                    <p className="text-sm text-accent">Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</p>
+                    <input
+                      type="password"
+                      placeholder="M-Pesa Password / ID Number"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full px-4 py-2 border border-bg-border rounded-lg bg-bg-base text-sm text-text-primary focus:outline-none focus:border-accent"
+                    />
+                  </div>
                 )}
               </div>
               <Button 
