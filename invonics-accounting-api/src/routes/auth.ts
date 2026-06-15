@@ -55,6 +55,7 @@ router.post('/register', validate(registerSchema), async (req, res, next) => {
     });
 
     return res.status(201).json({
+      token,
       user: {
         id: user.id,
         email: user.email,
@@ -98,6 +99,7 @@ router.post('/login', validate(loginSchema), async (req, res, next) => {
     });
 
     return res.status(200).json({
+      token,
       user: {
         id: user.id,
         email: user.email,
