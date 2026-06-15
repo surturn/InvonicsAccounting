@@ -74,9 +74,9 @@ export default function Reports() {
     }}
   ];
 
-  const safeTbData = Array.isArray(tbData) ? tbData : [];
-  const tbTotalDebits = safeTbData.reduce((s, r) => s + Number(r.total_debits || 0), 0);
-  const tbTotalCredits = safeTbData.reduce((s, r) => s + Number(r.total_credits || 0), 0);
+  const safeTbData = Array.isArray(tbData) ? tbData : (tbData?.rows || []);
+  const tbTotalDebits = (tbData && !Array.isArray(tbData) && tbData.totals) ? tbData.totals.debits : safeTbData.reduce((s: any, r: any) => s + Number(r.total_debits || 0), 0);
+  const tbTotalCredits = (tbData && !Array.isArray(tbData) && tbData.totals) ? tbData.totals.credits : safeTbData.reduce((s: any, r: any) => s + Number(r.total_credits || 0), 0);
   const isBalanced = Math.abs(tbTotalDebits - tbTotalCredits) < 0.01;
 
   return (
@@ -246,7 +246,7 @@ export default function Reports() {
             <div className="overflow-x-auto">
               <Table 
                 columns={tbColumns} 
-                data={tbData || []} 
+                data={safeTbData} 
                 loading={tbLoading} 
               />
               {!tbLoading && tbData && (
