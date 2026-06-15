@@ -120,21 +120,29 @@ export interface TransactionFilters {
 
 export interface CreateIncomeBody {
   date: string;
+  amount: number;
+  revenueAccountCode: string;
+  cashAccountCode: string;
   narration: string;
   partyId?: number;
-  lines: { accountId: number; amount: number }[];
+  reference?: string;
+  attachmentUrl?: string;
 }
 
 export interface CreateExpenseBody {
   date: string;
+  amount: number;
+  expenseAccountCode: string;
+  cashAccountCode: string;
   narration: string;
   partyId?: number;
-  lines: { accountId: number; amount: number }[];
+  reference?: string;
+  attachmentUrl?: string;
 }
 
 export interface CreateDrawingBody {
   date: string;
-  narration: string;
   amount: number;
-  cashAccountId?: number;
+  cashAccountCode: string;
+  narration: string;
 }

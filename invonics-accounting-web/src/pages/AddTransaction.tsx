@@ -86,32 +86,32 @@ export default function AddTransaction() {
 
     const basePayload = {
       date,
+      amount: Number(amount),
       narration: reference ? `${narration} (Ref: ${reference})` : narration,
       partyId: selectedPartyId || undefined,
     };
 
+    const categoryAccount = safeAccounts.find(a => a.id.toString() === accountId);
+    const cashAccount = safeAccounts.find(a => a.id.toString() === cashAccountId);
+
     if (activeTab === 'Income') {
       createIncome({
         ...basePayload,
-        lines: [
-          { accountId: Number(cashAccountId), amount: Number(amount) }, 
-          { accountId: Number(accountId), amount: Number(amount) } 
-        ]
+        revenueAccountCode: categoryAccount!.code,
+        cashAccountCode: cashAccount!.code,
       }, { onSuccess: handleSuccess });
     } else if (activeTab === 'Expense') {
       createExpense({
         ...basePayload,
-        lines: [
-          { accountId: Number(accountId), amount: Number(amount) }, 
-          { accountId: Number(cashAccountId), amount: Number(amount) } 
-        ]
+        expenseAccountCode: categoryAccount!.code,
+        cashAccountCode: cashAccount!.code,
       }, { onSuccess: handleSuccess });
     } else if (activeTab === 'Drawing') {
       createDrawing({
         date,
-        narration,
         amount: Number(amount),
-        cashAccountId: Number(cashAccountId)
+        narration: reference ? `${narration} (Ref: ${reference})` : narration,
+        cashAccountCode: cashAccount!.code,
       }, { onSuccess: handleSuccess });
     }
   };
