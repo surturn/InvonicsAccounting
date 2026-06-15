@@ -26,6 +26,6 @@ export async function sendMail(
     });
     logger.info(`Email sent successfully to ${to}`);
   } catch (err) {
-    logger.error(`Failed to send email to ${to}:`, err);
+    logger.error(err, `Failed to send email to ${to}:`);
   }
 }

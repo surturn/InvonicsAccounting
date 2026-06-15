@@ -35,6 +35,6 @@ URL: https://itax.kra.go.ke
     const ownerEmail = process.env.OWNER_EMAIL || 'owner@invonics.com';
     await sendMail(ownerEmail, subject, text);
   } catch (error) {
-    logger.error('Error in sendTOTReminder:', error);
+    logger.error(error, 'Error in sendTOTReminder:');
   }
 }

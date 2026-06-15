@@ -25,6 +25,6 @@ export async function autoLockPeriod() {
       logger.info(`autoLockPeriod: Period ${lastMonthLabel} not found or already locked.`);
     }
   } catch (error) {
-    logger.error('Error in autoLockPeriod:', error);
+    logger.error(error, 'Error in autoLockPeriod:');
   }
 }

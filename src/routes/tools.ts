@@ -171,7 +171,7 @@ ${accountsInfo}`
       });
 
     } catch (error) {
-      logger.error('M-Pesa Parsing Error:', error);
+      logger.error(error, 'M-Pesa Parsing Error:');
       return res.status(502).json({ error: 'Parsing service unavailable or failed to process' });
     }
   });

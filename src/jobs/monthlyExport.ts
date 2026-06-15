@@ -30,6 +30,6 @@ export async function sendMonthlyExport() {
       }
     ]);
   } catch (error) {
-    logger.error('Error in sendMonthlyExport:', error);
+    logger.error(error, 'Error in sendMonthlyExport:');
   }
 }

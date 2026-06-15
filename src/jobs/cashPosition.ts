@@ -42,6 +42,6 @@ Total Cash: ${formatKES(totalCash)}
     const ownerEmail = process.env.OWNER_EMAIL || 'owner@invonics.com';
     await sendMail(ownerEmail, subject, text);
   } catch (error) {
-    logger.error('Error in sendWeeklyCashPosition:', error);
+    logger.error(error, 'Error in sendWeeklyCashPosition:');
   }
 }

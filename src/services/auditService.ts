@@ -17,6 +17,6 @@ export async function log(
       [tableName, recordId, action, oldValues, newValues, performedBy]
     );
   } catch (err) {
-    logger.error('Audit log failed:', err);
+    logger.error(err, 'Audit log failed:');
   }
 }
