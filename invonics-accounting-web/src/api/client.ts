@@ -6,7 +6,9 @@ const client = axios.create({
 });
 
 client.interceptors.request.use((config) => {
-  config.headers['Content-Type'] = 'application/json';
+  if (!(config.data instanceof FormData)) {
+    config.headers['Content-Type'] = 'application/json';
+  }
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
