@@ -20,4 +20,4 @@ export const logoutUser = () =>
   });
 
 export const getMe = (): Promise<User> =>
-  client.get('/auth/me').then((r: any) => r.data);
+  client.get('/auth/me').then((r: any) => r.data.user);
