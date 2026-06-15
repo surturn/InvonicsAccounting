@@ -30,23 +30,15 @@ const loginLimiter = rateLimit({
 
 app.use('/api/auth/login', loginLimiter);
 
-// Apply authenticateToken to all routes EXCEPT /api/auth/login
-app.use('/api', (req, res, next) => {
-  if (req.path === '/auth/login' && req.method === 'POST') {
-    return next();
-  }
-  return authenticateToken(req, res, next);
-});
-
 // Mount routers
 app.use('/api/auth', authRoutes);
-app.use('/api/accounts', accountsRoutes);
-app.use('/api/transactions', transactionsRoutes);
-app.use('/api/reports', reportsRoutes);
-app.use('/api/export', exportRoutes);
-app.use('/api/parties', partiesRoutes);
-app.use('/api/periods', periodsRoutes);
-app.use('/api/tools', toolsRoutes);
+app.use('/api/accounts', authenticateToken, accountsRoutes);
+app.use('/api/transactions', authenticateToken, transactionsRoutes);
+app.use('/api/reports', authenticateToken, reportsRoutes);
+app.use('/api/export', authenticateToken, exportRoutes);
+app.use('/api/parties', authenticateToken, partiesRoutes);
+app.use('/api/periods', authenticateToken, periodsRoutes);
+app.use('/api/tools', authenticateToken, toolsRoutes);
 
 app.use(errorHandler);
 

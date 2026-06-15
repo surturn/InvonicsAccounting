@@ -4,26 +4,27 @@ import { formatKES } from '../utils/format';
 
 export async function sendTOTReminder() {
   try {
-    const today = new Date();
-    const firstDay = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-    const lastDay = new Date(today.getFullYear(), today.getMonth(), 0);
-
-    const from = firstDay.toISOString().split('T')[0];
-    const to = lastDay.toISOString().split('T')[0];
+    const now = new Date();
+    const from = new Date(now.getFullYear(), now.getMonth(), 1)
+      .toISOString().split('T')[0];
+    const to = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+      .toISOString().split('T')[0];
 
     const report = await getTOTReport(from, to);
+    const totPayable = report.totPayable;
+    const grossTurnover = report.grossTurnover;
 
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const monthName = monthNames[firstDay.getMonth()];
-    const year = firstDay.getFullYear();
+    const monthName = monthNames[now.getMonth()];
+    const year = now.getFullYear();
     const monthYear = `${monthName} ${year}`;
 
     const subject = `TOT Reminder — ${monthYear}`;
     const text = `
 Period: ${monthYear}
-Gross Turnover: ${formatKES(report.grossTurnover)}
+Gross Turnover: ${formatKES(grossTurnover)}
 TOT Rate: ${report.totRate}%
-Amount Payable: ${formatKES(report.totPayable)}
+Amount Payable: ${formatKES(totPayable)}
 
 Please file your TOT on iTax before the 20th of this month.
 URL: https://itax.kra.go.ke

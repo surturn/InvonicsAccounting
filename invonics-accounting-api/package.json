@@ -9,7 +9,7 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.24.x",
+    "openai": "^4.0.0",
     "bcrypt": "^5.1.x",
     "cookie-parser": "^1.4.x",
     "cors": "^2.8.x",
@@ -22,7 +22,6 @@
     "multer": "^1.4.x",
     "node-cron": "^3.0.x",
     "nodemailer": "^6.9.x",
-    "pdf-parse": "^1.1.x",
     "pg": "^8.11.x",
     "zod": "^3.22.x"
   },
