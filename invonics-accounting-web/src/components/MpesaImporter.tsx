@@ -49,13 +49,20 @@ export function MpesaImporter() {
     try {
       const res = await parseMpesaPDF(file, password);
       if (res.transactions) {
-        setParsedTxs(res.transactions.map((t: any, i: number) => ({
-          ...t,
-          id: i,
-          selected: true,
-          categoryId: '',
-          cashAccountId: mpesaAccount?.id?.toString() || ''
-        })));
+        setParsedTxs(res.transactions.map((t: any, i: number) => {
+          // AI might return positive amount with type 'debit', or negative amount
+          const isDebit = t.type === 'debit' || t.amount < 0;
+          const finalAmount = isDebit ? -Math.abs(t.amount) : Math.abs(t.amount);
+          
+          return {
+            ...t,
+            id: i,
+            amount: finalAmount,
+            selected: true,
+            categoryId: '',
+            cashAccountId: mpesaAccount?.id?.toString() || ''
+          };
+        }));
       }
     } catch (err: any) {
       error(err.response?.data?.error || 'Failed to parse statement');
