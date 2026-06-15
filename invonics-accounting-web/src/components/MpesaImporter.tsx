@@ -112,22 +112,31 @@ export function MpesaImporter() {
         const isMoneyIn = t.amount > 0;
         const absAmount = Math.abs(t.amount);
         
+        const categoryAccount = safeAccounts.find(a => a.id.toString() === t.categoryId);
+        const cashAccount = safeAccounts.find(a => a.id.toString() === t.cashAccountId);
+        
+        if (!categoryAccount || !cashAccount) {
+          throw new Error('Invalid account mapping');
+        }
+
         const payload = {
           date: t.date,
-          narration: `[M-Pesa] ${t.description} ${t.party ? '- ' + t.party : ''}`,
-          lines: isMoneyIn ? [
-            { accountId: Number(t.cashAccountId), amount: absAmount }, // DR Cash
-            { accountId: Number(t.categoryId), amount: absAmount } // CR Income
-          ] : [
-            { accountId: Number(t.categoryId), amount: absAmount }, // DR Expense
-            { accountId: Number(t.cashAccountId), amount: absAmount } // CR Cash
-          ]
+          amount: absAmount,
+          narration: `[M-Pesa] ${t.description} ${t.party ? '- ' + t.party : ''}`.substring(0, 200),
         };
 
         if (isMoneyIn) {
-          await createIncome(payload as any);
+          await createIncome({
+            ...payload,
+            revenueAccountCode: categoryAccount.code,
+            cashAccountCode: cashAccount.code,
+          });
         } else {
-          await createExpense(payload as any);
+          await createExpense({
+            ...payload,
+            expenseAccountCode: categoryAccount.code,
+            cashAccountCode: cashAccount.code,
+          });
         }
         
         setImportProgress(i + 1);
