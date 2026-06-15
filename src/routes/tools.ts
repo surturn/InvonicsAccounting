@@ -9,7 +9,9 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'application/pdf' || file.mimetype.startsWith('image/')) cb(null, true);
+    const isImageMime = file.mimetype.startsWith('image/');
+    const isImageExt = file.originalname.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/);
+    if (file.mimetype === 'application/pdf' || isImageMime || isImageExt) cb(null, true);
     else cb(new Error('Only PDF and image files allowed'));
   }
 });
@@ -25,7 +27,9 @@ router.post('/parse-mpesa-statement', (req, res, next) => {
         return res.status(400).json({ error: 'No file uploaded' });
       }
 
-      const isImage = req.file.mimetype.startsWith('image/');
+      const isImageMime = req.file.mimetype.startsWith('image/');
+      const isImageExt = req.file.originalname.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/);
+      const isImage = isImageMime || isImageExt;
       const password = req.body.password;
       
       if (!isImage && !password) {
@@ -82,6 +86,19 @@ Rules:
         ];
       } else {
         const base64Image = req.file.buffer.toString('base64');
+        let finalMimeType = req.file.mimetype;
+        if (!req.file.mimetype.startsWith('image/')) {
+          const ext = req.file.originalname.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/);
+          if (ext) {
+            if (ext[1] === 'png') finalMimeType = 'image/png';
+            else if (ext[1] === 'webp') finalMimeType = 'image/webp';
+            else if (ext[1] === 'gif') finalMimeType = 'image/gif';
+            else finalMimeType = 'image/jpeg';
+          } else {
+            finalMimeType = 'image/jpeg'; // Fallback
+          }
+        }
+        
         messages = [
           {
             role: 'user',
@@ -109,7 +126,7 @@ Rules:
               {
                 type: 'image_url',
                 image_url: {
-                  url: `data:${req.file.mimetype};base64,${base64Image}`
+                  url: `data:${finalMimeType};base64,${base64Image}`
                 }
               }
             ]
