@@ -1,4 +1,5 @@
 import { query } from '../pool';
+import logger from '../../utils/logger';
 
 export async function getPLReport(from: string, to: string) {
   const incomeResult = await query(
@@ -41,6 +42,8 @@ export async function getPLReport(from: string, to: string) {
   };
 }
 
+import { calculateTOT } from '../../utils/tax';
+
 export async function getTOTReport(from: string, to: string) {
   const result = await query(
     `SELECT COALESCE(SUM(jl.credit), 0) AS gross_turnover
@@ -61,7 +64,7 @@ export async function getTOTReport(from: string, to: string) {
   );
   
   const totRate = taxResult.rows.length > 0 ? parseFloat(taxResult.rows[0].rate) : 0;
-  const totPayable = grossTurnover * (totRate / 100);
+  const totPayable = calculateTOT(grossTurnover, totRate);
 
   return {
     grossTurnover,
@@ -106,7 +109,7 @@ export async function getTrialBalance(from: string, to: string) {
   });
 
   if (Math.abs(sumDebits - sumCredits) > 0.001) {
-    console.warn(`Trial balance mismatch! Debits: ${sumDebits}, Credits: ${sumCredits}`);
+    logger.warn(`Trial balance mismatch! Debits: ${sumDebits}, Credits: ${sumCredits}`);
   }
 
   return {

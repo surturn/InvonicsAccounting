@@ -1,4 +1,5 @@
 import { query } from '../db/pool';
+import logger from '../utils/logger';
 
 export async function log(
   tableName: string, 
@@ -16,6 +17,6 @@ export async function log(
       [tableName, recordId, action, oldValues, newValues, performedBy]
     );
   } catch (err) {
-    console.error('Audit log failed:', err);
+    logger.error('Audit log failed:', err);
   }
 }

@@ -2,6 +2,8 @@ import { getTOTReport } from '../db/queries/reports';
 import { sendMail } from '../services/mailer';
 import { formatKES } from '../utils/format';
 
+import logger from '../utils/logger';
+
 export async function sendTOTReminder() {
   try {
     const now = new Date();
@@ -33,6 +35,6 @@ URL: https://itax.kra.go.ke
     const ownerEmail = process.env.OWNER_EMAIL || 'owner@invonics.com';
     await sendMail(ownerEmail, subject, text);
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] Error in sendTOTReminder:`, error);
+    logger.error('Error in sendTOTReminder:', error);
   }
 }

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import OpenAI from 'openai';
 const pdfParse = require('pdf-parse');
+import logger from '../utils/logger';
 
 const router = Router();
 
@@ -170,7 +171,7 @@ ${accountsInfo}`
       });
 
     } catch (error) {
-      console.error('M-Pesa Parsing Error:', error);
+      logger.error('M-Pesa Parsing Error:', error);
       return res.status(502).json({ error: 'Parsing service unavailable or failed to process' });
     }
   });

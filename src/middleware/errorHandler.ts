@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import logger from '../utils/logger';
 
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   let statusCode = 500;
@@ -21,7 +22,7 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
   if (process.env.NODE_ENV !== 'production') {
     response.details = err.stack;
   } else if (statusCode === 500) {
-    console.error(err);
+    logger.error(err);
   }
 
   res.status(statusCode).json(response);

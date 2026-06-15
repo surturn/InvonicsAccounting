@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import logger from '../utils/logger';
 
 const transporter = nodemailer.createTransport({
   host: 'smtp-relay.brevo.com',
@@ -23,8 +24,8 @@ export async function sendMail(
       text,
       attachments,
     });
-    console.log(`[${new Date().toISOString()}] Email sent successfully to ${to}`);
+    logger.info(`Email sent successfully to ${to}`);
   } catch (err) {
-    console.error(`[${new Date().toISOString()}] Failed to send email to ${to}:`, err);
+    logger.error(`Failed to send email to ${to}:`, err);
   }
 }

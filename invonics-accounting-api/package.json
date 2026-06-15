@@ -4,8 +4,8 @@
   "description": "Invonics Technologies - Accounting System API",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
+    "dev": "ts-node-dev --respawn ../src/server.ts",
+    "build": "tsc --project ../tsconfig.json --outDir dist",
     "start": "node dist/server.js"
   },
   "dependencies": {

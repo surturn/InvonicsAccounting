@@ -1,6 +1,7 @@
 import { query } from '../db/pool';
 import { sendMail } from '../services/mailer';
 import { formatKES, formatDate } from '../utils/format';
+import logger from '../utils/logger';
 
 export async function sendWeeklyCashPosition() {
   try {
@@ -41,6 +42,6 @@ Total Cash: ${formatKES(totalCash)}
     const ownerEmail = process.env.OWNER_EMAIL || 'owner@invonics.com';
     await sendMail(ownerEmail, subject, text);
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] Error in sendWeeklyCashPosition:`, error);
+    logger.error('Error in sendWeeklyCashPosition:', error);
   }
 }

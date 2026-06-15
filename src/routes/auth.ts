@@ -4,7 +4,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { validate } from '../middleware/validate';
 import { authenticateToken } from '../middleware/auth';
-import { query } from '../db/pool';
+import { query, pool } from '../db/pool';
+import { seedChartOfAccounts } from '../db/seeds/chartOfAccounts';
+import { seedFiscalPeriods } from '../db/seeds/fiscalPeriods';
+import { seedTaxSettings } from '../db/seeds/taxSettings';
 
 const router = Router();
 
@@ -20,6 +23,7 @@ const registerSchema = z.object({
 });
 
 router.post('/register', validate(registerSchema), async (req, res, next) => {
+  let client;
   try {
     const { name, email, password } = req.body;
 
@@ -31,7 +35,10 @@ router.post('/register', validate(registerSchema), async (req, res, next) => {
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
-    const result = await query(
+    client = await pool.connect();
+    await client.query('BEGIN');
+
+    const result = await client.query(
       `INSERT INTO users (name, email, password_hash, role, is_active)
        VALUES ($1, $2, $3, 'user', true)
        RETURNING id, name, email, role`,
@@ -39,6 +46,20 @@ router.post('/register', validate(registerSchema), async (req, res, next) => {
     );
 
     const user = result.rows[0];
+
+    const companyResult = await client.query(
+      `INSERT INTO companies (name, owner_id)
+       VALUES ($1, $2)
+       RETURNING id`,
+      [user.name, user.id]
+    );
+    const company = companyResult.rows[0];
+
+    await seedChartOfAccounts(client, company.id);
+    await seedFiscalPeriods(client, company.id);
+    await seedTaxSettings(client, company.id);
+
+    await client.query('COMMIT');
 
     const secret = process.env.JWT_SECRET!;
     const token = jwt.sign(
@@ -64,7 +85,10 @@ router.post('/register', validate(registerSchema), async (req, res, next) => {
       }
     });
   } catch (error) {
+    if (client) await client.query('ROLLBACK');
     next(error);
+  } finally {
+    if (client) client.release();
   }
 });
 

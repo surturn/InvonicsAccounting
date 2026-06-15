@@ -11,6 +11,8 @@ node_modules/
 # Production
 dist/
 build/
+invonics-accounting-api/dist/
+invonics-accounting-api/node_modules/
 
 # Env files
 .env

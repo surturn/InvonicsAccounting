@@ -1,6 +1,7 @@
 import { getTransactionsForExport } from '../db/queries/reports';
 import { generateTransactionCSV } from '../services/exportService';
 import { sendMail } from '../services/mailer';
+import logger from '../utils/logger';
 
 export async function sendMonthlyExport() {
   try {
@@ -29,6 +30,6 @@ export async function sendMonthlyExport() {
       }
     ]);
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] Error in sendMonthlyExport:`, error);
+    logger.error('Error in sendMonthlyExport:', error);
   }
 }

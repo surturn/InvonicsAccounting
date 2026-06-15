@@ -1,4 +1,5 @@
 import { query } from '../db/pool';
+import logger from '../utils/logger';
 
 export async function autoLockPeriod() {
   try {
@@ -19,11 +20,11 @@ export async function autoLockPeriod() {
         `UPDATE fiscal_periods SET is_locked = true, locked_at = NOW(), locked_by = 0 WHERE id = $1`,
         [periodId]
       );
-      console.log(`[${new Date().toISOString()}] Successfully auto-locked period: ${lastMonthLabel}`);
+      logger.info(`Successfully auto-locked period: ${lastMonthLabel}`);
     } else {
-      console.log(`[${new Date().toISOString()}] autoLockPeriod: Period ${lastMonthLabel} not found or already locked.`);
+      logger.info(`autoLockPeriod: Period ${lastMonthLabel} not found or already locked.`);
     }
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] Error in autoLockPeriod:`, error);
+    logger.error('Error in autoLockPeriod:', error);
   }
 }
