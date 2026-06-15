@@ -154,7 +154,7 @@ export function MpesaImporter() {
       <input type="checkbox" checked={t.selected} onChange={() => handleToggleSelect(t.id)} />
     )},
     { key: 'date', header: 'Date', render: (t: any) => formatDate(t.date) },
-    { key: 'description', header: 'Description' },
+    { key: 'description', header: 'Description', className: 'whitespace-normal min-w-[200px] max-w-[400px]' },
     { key: 'party', header: 'Party' },
     { key: 'amount', header: 'Amount', render: (t: any) => (
       <span className={`font-medium ${t.amount > 0 ? 'text-accent' : 'text-danger'}`}>
@@ -164,12 +164,13 @@ export function MpesaImporter() {
     { key: 'type', header: 'Type', render: (t: any) => (
       <Badge variant={t.amount > 0 ? 'income' : 'expense'}>{t.amount > 0 ? 'Money In' : 'Money Out'}</Badge>
     )},
-    { key: 'mappings', header: 'Mapping', render: (t: any) => (
+    { key: 'mappings', header: 'Mapping', className: 'min-w-[320px]', render: (t: any) => (
       t.selected ? (
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full">
           <Select 
             value={t.categoryId} 
             onChange={(e) => handleChangeCategory(t.id, e.target.value)}
+            className="w-1/2"
             options={[
               { label: 'Category...', value: '' },
               ...(t.amount > 0 ? incomeAccounts : expenseAccounts).map(a => ({ label: a.name, value: a.id.toString() }))
@@ -178,6 +179,7 @@ export function MpesaImporter() {
           <Select 
             value={t.cashAccountId} 
             onChange={(e) => handleChangeCashAccount(t.id, e.target.value)}
+            className="w-1/2"
             options={[
               { label: 'Cash Acc...', value: '' },
               ...safeAccounts.filter(a => ['asset'].includes(a.type) && !a.is_turnover).map(a => ({ label: a.name, value: a.id.toString() }))

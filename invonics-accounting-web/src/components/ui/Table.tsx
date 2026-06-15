@@ -6,6 +6,7 @@ interface Column<T> {
   key: string;
   header: string;
   render?: (item: T) => React.ReactNode;
+  className?: string;
 }
 
 interface TableProps<T> {
@@ -68,7 +69,7 @@ export function Table<T extends Record<string, any>>({
                 )}
               >
                 {columns.map((col) => (
-                  <td key={col.key} className="px-4 py-3 text-sm text-text-primary whitespace-nowrap">
+                  <td key={col.key} className={cn("px-4 py-3 text-sm text-text-primary whitespace-nowrap", col.className)}>
                     {col.render ? col.render(row) : row[col.key]}
                   </td>
                 ))}
